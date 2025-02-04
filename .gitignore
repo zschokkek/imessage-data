@@ -1,0 +1,5 @@
+*.txt
+*.csv
+name_map.py
+venv
+!requirements.txt
