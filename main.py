@@ -249,7 +249,7 @@ def plot_reaction_probability_network(probabilities, reaction_matrix, message_co
     plt.show()
 
 def analyze_name_mentions(name_mentions):
-    target_names = ["Sarina", "Ilona", "Angel", "Sevigne", "Mia"]
+    target_names = ["Tatum", "LeBron", "Bronny", "Brown", "Mahomes", "Maye"]
     
     print("\nName Mention Analysis:")
     for name in target_names:
