@@ -3,3 +3,6 @@
 name_map.py
 venv
 !requirements.txt
+train.py
+gen.py
+__pycache__

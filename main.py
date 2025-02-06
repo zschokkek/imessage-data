@@ -4,11 +4,15 @@ from datetime import datetime
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
-import calplot
 import networkx as nx
 from scipy.stats import beta
-from name_map import NAME_MAP
+from name_map import NAME_MAP, REPLACEMENTS
 import pandas as pd
+from nltk import pos_tag, word_tokenize
+import nltk
+nltk.download('averaged_perceptron_tagger')
+nltk.download('averaged_perceptron_tagger_eng')
+nltk.download('punkt')
 
 
 
@@ -34,13 +38,14 @@ def analyze_message_data(file_path):
     current_sender = None
     current_time = None
 
-    target_names = ["Ilona", "Angel ", "Sevigne", "Mia"]
+    target_names = ["Tatum", "LeBron", "Bronny", "Brown", "Mahomes", "Maye"]
+
 
 
     with open(file_path, 'r', encoding='utf-8') as file:
         for line in file:
-            line = line.replace('elimendels55@gmail.com', '+16176865741') # Fix Eli Email
-            line = line.replace('Me', '+17742793396') 
+            line = line.replace(REPLACEMENTS[0], REPLACEMENTS[1]) # Fix Eli Email
+            line = line.replace(REPLACEMENTS[2], REPLACEMENTS[3]) 
             line = line.strip()
             date_match = re.match(date_pattern, line)
             if date_match:
@@ -82,7 +87,7 @@ def analyze_message_data(file_path):
     return message_times, total_messages_by_hour, word_counter, reactions_received, message_counts, reaction_matrix, name_mentions, daily_message_counts
 
 def analyze_name_mentions_per_message(name_mentions, message_counts):
-    target_names = ["Ilona", "Angel", "Sevigne", "Mia"]
+    target_names = ["Tatum", "LeBron", "Bronny", "Brown", "Mahomes", "Maye"]
 
     print("\nName Mention Analysis (per message):")
     for name in target_names:
@@ -136,7 +141,7 @@ def plot_reaction_heatmap(reaction_matrix):
     
     plt.figure(figsize=(12, 10))
     sns.heatmap(data, annot=True, fmt='d', cmap='YlGnBu', xticklabels=names, yticklabels=names)
-    plt.title('Slurp Chart: Who Reacts to Whom')
+    plt.title('React Chart: Who Reacts to Whom')
     plt.xlabel('Receiver of Reaction')
     plt.ylabel('Giver of Reaction')
     plt.tight_layout()
@@ -248,6 +253,48 @@ def plot_reaction_probability_network(probabilities, reaction_matrix, message_co
     plt.tight_layout()
     plt.show()
 
+def plot_word_frequency_table(word_counter):
+    # Filter words and get top 25
+
+    # Filter for nouns only using NLTK
+    nouns = {}
+    for word, count in word_counter.items():
+        if len(word) > 3 and not word.startswith('http'):
+            pos = pos_tag([word])
+            if pos[0][1].startswith('NN'):  # NN tags indicate nouns
+                nouns[word] = count
+                
+    top_words = dict(sorted(nouns.items(), key=lambda x: x[1], reverse=True)[:25])
+    
+    # Create figure and axis
+    fig, ax = plt.subplots(figsize=(12, 8))
+    ax.axis('off')
+    
+    # Create table data
+    table_data = [[word, count] for word, count in top_words.items()]
+    
+    # Create and customize table
+    table = ax.table(cellText=table_data,
+                    colLabels=['Word', 'Frequency'],
+                    loc='center',
+                    cellLoc='center',
+                    colWidths=[0.6, 0.4])
+    
+    # Style the table
+    table.auto_set_font_size(False)
+    table.set_fontsize(9)
+    table.scale(1.2, 1.5)
+    
+    # Color header
+    for j, cell in enumerate(table._cells[(0, j)] for j in range(2)):
+        cell.set_facecolor('#4472C4')
+        cell.set_text_props(color='white', weight='bold')
+    
+    plt.title('Top 25 Most Frequent Words', pad=20)
+    plt.tight_layout()
+    plt.show()
+
+
 def analyze_name_mentions(name_mentions):
     target_names = ["Tatum", "LeBron", "Bronny", "Brown", "Mahomes", "Maye"]
     
@@ -281,8 +328,8 @@ def analyze_most_reacted_messages(file_path):
     
     with open(file_path, 'r', encoding='utf-8') as file:
         for line in file:
-            line = line.replace('elimendels55@gmail.com', '+16176865741')
-            line = line.replace('Me', '+17742793396')
+            line = line.replace(REPLACEMENTS[0], REPLACEMENTS[1])
+            line = line.replace(REPLACEMENTS[2], REPLACEMENTS[3])
             line = line.strip()
             
             date_match = re.match(date_pattern, line)
@@ -334,13 +381,14 @@ def analyze_most_reacted_messages(file_path):
     return df
 
 def main():
-    file_path = "ZOGGER DIZGORZE - 40.txt"
+    file_path = "WDGSN.txt"
     try:
         message_times, total_messages_by_hour, word_counter, reactions_received, message_counts, reaction_matrix, name_mentions, daily_message_counts = analyze_message_data(file_path)
         plot_time_distribution(message_times, total_messages_by_hour)
         plot_reaction_heatmap(reaction_matrix)
         plot_activity_calendar(daily_message_counts)
 
+        plot_word_frequency_table(word_counter)
         print(f"\nTotal number of messages: {sum(message_counts.values())}")
         
         print("\nMessage count by person:")

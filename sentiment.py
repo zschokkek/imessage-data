@@ -6,8 +6,8 @@ from sklearn.decomposition import LatentDirichletAllocation
 
 # Mapping phone numbers and 'Me' to names
 NAME_MAP = {
-    '+16176865741': 'Eli',
-    '+15086567672': 'Nikhil',
+    '+16176865741': 'Sam',
+    '+15086567672': 'Frodo',
     '+17742495038': 'Nicket',
     '+18577565980': 'Easwer',
     '+16176783154': 'Svayam',
