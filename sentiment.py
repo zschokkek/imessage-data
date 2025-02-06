@@ -3,18 +3,8 @@ import pandas as pd
 from textblob import TextBlob
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.decomposition import LatentDirichletAllocation
+from name_map import NAME_MAP
 
-# Mapping phone numbers and 'Me' to names
-NAME_MAP = {
-    '+16176865741': 'Sam',
-    '+15086567672': 'Frodo',
-    '+17742495038': 'Nicket',
-    '+18577565980': 'Easwer',
-    '+16176783154': 'Svayam',
-    '+16177947953': 'Arjun',
-    '+17742850915': 'Neil',
-    'Me': 'Kyle'  # Mapping 'Me' to 'Kyle'
-}
 
 def parse_messages(file_contents):
     """
