@@ -3,24 +3,7 @@ from collections import defaultdict
 from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
 import networkx as nx
-
-# Name mapping
-NAME_MAP = {
-    '+16176865741': 'Eli',
-    '+15086567672': 'Nikhil',
-    '+17742495038': 'Nicket',
-    '+18577565980': 'Easwer',
-    '+16176783154': 'Svayam',
-    '+16177947953': 'Arjun',
-    '+17742850915': 'Neil',
-    '+17742793396': 'Kyle',
-    '+15033489354': 'Caden',
-    '+18587521051': 'Carter', 
-    '+12102842465': 'Jake',
-    '+15033807803': 'Ian',
-    '+15039708086': 'Natty'
-}
-
+from name_map import NAME_MAP
 def parse_time(time_str):
     try:
         return datetime.strptime(time_str, '%b %d, %Y %I:%M:%S %p')
